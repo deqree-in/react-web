@@ -49,5 +49,9 @@
   "devDependencies": {
     "gh-pages": "^3.2.3",
     "sass": "^1.35.2"
-  }
+  },
+  "optionalDependencies": {
+   "fsevents1": "npm:fsevents@^2.3.2",
+   "fsevents2": "npm:fsevents@^1.2.13"
+}
 }
