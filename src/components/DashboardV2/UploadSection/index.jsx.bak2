@@ -1,0 +1,129 @@
+import React from "react";
+import "./index.css";
+import { Context } from "../../GlobalContext";
+import axios from "axios";
+
+const Uploader = () => {
+  const globalContext = React.useContext(Context);
+  const headers = {
+    Authorization: `Bearer ${globalContext.access_token}`,
+  };
+  //selecting all required elements
+  const dropArea = React.useRef(null);
+  const dragText = React.useRef(null);
+  const button = React.useRef(null);
+  const input = React.useRef(null);
+  const filer = React.useRef(null);
+  React.useEffect(() => {
+    // console.log(globalContext);
+    // const dropArea = document.querySelector(".drag-area"),
+    // dragText = dropArea.querySelector("header"),
+    // button = dropArea.querySelector("button"),
+    // input = dropArea.querySelector("input");
+    let file; //this is a global variable and we'll use it inside multiple functions
+
+    button.current.onclick = () => {
+      input.current.click(); //if user click on the button then the input also clicked
+    };
+
+    input.current.addEventListener("change", function () {
+      //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+      file = this.files;
+      dropArea.current.classList.add("active");
+      console.log(file);
+      axios
+        .post("https://deqree.in/api/uploader", file, {
+          headers: headers,
+        })
+        .then((response) => {
+          console.log(response);
+          // setModal(!modal);
+          // if (response.data.Executed) {
+          //   const text = `
+          //   Your Files have been uploaded successfully.
+          // `;
+          //   setStatus("success");
+          //   setFeedback(text);
+          // } else {
+          //   setStatus("error");
+          //   setFeedback(response.data);
+          // }
+          // setFeedback(JSON.stringify(response));
+          // console.log(response);
+        });
+    });
+
+    //If user Drag File Over DropArea
+    dropArea.current.addEventListener("dragover", (event) => {
+      event.preventDefault(); //preventing from default behaviour
+      dropArea.current.classList.add("active");
+      dragText.current.textContent = "Release to Upload File";
+    });
+
+    //If user leave dragged File from DropArea
+    dropArea.current.addEventListener("dragleave", () => {
+      dropArea.current.classList.remove("active");
+      dragText.current.textContent = "Drag & Drop to Upload File";
+    });
+
+    //If user drop File on DropArea
+    dropArea.current.addEventListener("drop", (event) => {
+      event.preventDefault(); //preventing from default behaviour
+      //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+      // file = event.dataTransfer.files;
+      // console.log(file);
+      const formData = new FormData(filer.current);
+      console.log(formData);
+      // file = new FormData(filer.current);
+      axios
+        .post("https://deqree.in/api/uploader", formData, {
+          headers: headers,
+        })
+        .then((response) => {
+          console.log(response);
+          // setModal(!modal);
+          // if (response.data.Executed) {
+          //   const text = `
+          //   Your Files have been uploaded successfully.
+          // `;
+          //   setStatus("success");
+          //   setFeedback(text);
+          // } else {
+          //   setStatus("error");
+          //   setFeedback(response.data);
+          // }
+          // setFeedback(JSON.stringify(response));
+          // console.log(response);
+        });
+    });
+  }, []);
+
+  return (
+    <>
+      <div className="upload-section">
+        {/* Upload Certificates */}
+        <div ref={dropArea} className="drag-area ">
+          <div className="icon">
+            <i className="fas fa-cloud-upload-alt"></i>
+          </div>
+          <header ref={dragText}>Drag & Drop to Upload File</header>
+          <span>OR</span>
+          <button ref={button}>Browse File</button>
+          <form id="upload-form" ref={filer} encType="multipart/form-data">
+            <input
+              type="file"
+              id="upload-field"
+              name="files[]"
+              multiple
+              required
+              ref={input}
+              type="file"
+              hidden
+            />
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
+export default Uploader;

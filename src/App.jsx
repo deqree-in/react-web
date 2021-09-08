@@ -7,7 +7,7 @@ import About from "./components/About";
 import Footer from "./components/Footer";
 import Contact from "./components/Contact";
 import Signin from "./components/Signin";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/DashboardV2";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
 

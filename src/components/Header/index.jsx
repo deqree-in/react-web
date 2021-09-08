@@ -13,6 +13,8 @@ import LockOpenIcon from "@material-ui/icons/LockOpen";
 import InfoIcon from "@material-ui/icons/Info";
 import EmailIcon from "@material-ui/icons/Email";
 import StarsIcon from "@material-ui/icons/Stars";
+import DescriptionIcon from "@material-ui/icons/Description";
+import MapIcon from "@material-ui/icons/Map";
 import Popover from "@material-ui/core/Popover";
 import logo from "../../images/whiteLogo.png";
 import "./styles.css";
@@ -204,6 +206,26 @@ const Header = () => {
               <StarsIcon style={{ color: "#0270D7" }} />
             </ListItemIcon>
             <ListItemText primary="Why deqree" />
+          </ListItem>
+          <Divider />
+          <a
+            target="_blank"
+            href="https://drive.google.com/file/d/13yXEp9yfZ6JPAvVwiCjxkCl10iSQDk1w/view"
+            style={{ textDecoration: "none", color: "white" }}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <DescriptionIcon style={{ color: "#0270D7" }} />
+              </ListItemIcon>
+              <ListItemText primary="White Paper" />
+            </ListItem>
+          </a>
+          <Divider />
+          <ListItem button onClick={() => scrollToSection("roadmap")}>
+            <ListItemIcon>
+              <MapIcon style={{ color: "#0270D7" }} />
+            </ListItemIcon>
+            <ListItemText primary="Roadmap" />
           </ListItem>
           <Divider />
           <Link to="/signin" style={{ textDecoration: "none", color: "white" }}>

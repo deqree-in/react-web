@@ -1,0 +1,46 @@
+.dashboard-settings {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-display {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10vw;
+}
+
+.settings-display > input {
+  border: "1px solid red";
+}
+
+.settings-header {
+  background: #181b22;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 60%);
+  transition: 0.3s;
+  padding: 20px 45px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.settings-nav {
+  border-right: 1px solid #181b22;
+}
+
+.settings-area {
+  display: flex;
+  flex-direction: row;
+  background: radial-gradient(circle, #262a33 0%, #1c2027 100%);
+  padding: 40px 30px;
+  padding-left: 0;
+  border-radius: 6px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 60%);
+  transition: 0.3s;
+}
+
+.button {
+  text-align: left !important;
+}

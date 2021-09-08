@@ -1,9 +1,12 @@
 import React from "react";
 import anime from "animejs/lib/anime.es.js";
+import axios from "axios";
+import { Context } from "../GlobalContext";
 import { useHistory } from "react-router-dom";
 import "./stylesheet.css";
 
 const Signin = () => {
+  const globalContext = React.useContext(Context);
   const history = useHistory();
   React.useEffect(() => {
     var current = null;
@@ -69,13 +72,26 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === "admin@deqree.in" && pass === "deqree.in") {
-      history.push("/dashboard");
-    } else {
-      setError("Invalid credentials");
-      setEmail("");
-      setPass("");
-    }
+    // if (email === "admin@deqree.in" && pass === "deqree.in") {
+    //   history.push("/dashboard");
+    // } else {
+    //   setError("Invalid credentials");
+    //   setEmail("");
+    //   setPass("");
+    // }
+    axios
+      .post("https://deqree.in/api/login", { email: email, password: pass })
+      .then(({ data }) => {
+        if (data.access_token) {
+          globalContext.setAccessToken(data.access_token);
+          history.push("/dashboard");
+        }
+        if (data.message) {
+          setError("Invalid credentials");
+          setEmail("");
+          setPass("");
+        }
+      });
   };
 
   return (

@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
-import { useMediaQuery } from "@material-ui/core";
+import { Typography, useMediaQuery } from "@material-ui/core";
 import { Dialog } from "@material-ui/core";
+import { Context } from "../../GlobalContext";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from "@material-ui/lab/Alert";
@@ -31,6 +32,7 @@ const spinnerStyle = makeStyles({
 });
 
 const UploadSection = () => {
+  const globalContext = React.useContext(Context);
   const veriClasses = veriStyles();
   const spinnerClasses = spinnerStyle();
   const filer = React.useRef(null);
@@ -44,21 +46,27 @@ const UploadSection = () => {
     e.preventDefault();
     const formData = new FormData(filer.current);
     console.log(formData);
-    axios.post("https://deqree.in/api/uploader", formData).then((response) => {
-      // setModal(!modal);
-      if (response.data.Executed) {
-        const text = `
+    axios
+      .post("https://deqree.in/api/uploader", formData, {
+        headers: {
+          Authorization: `Bearer ${globalContext.access_token}`,
+        },
+      })
+      .then((response) => {
+        // setModal(!modal);
+        if (response.data.Executed) {
+          const text = `
           Your Files have been uploaded successfully.
         `;
-        setStatus("success");
-        setFeedback(text);
-      } else {
-        setStatus("error");
-        setFeedback(response.data);
-      }
-      // setFeedback(JSON.stringify(response));
-      // console.log(response);
-    });
+          setStatus("success");
+          setFeedback(text);
+        } else {
+          setStatus("error");
+          setFeedback(response.data);
+        }
+        // setFeedback(JSON.stringify(response));
+        // console.log(response);
+      });
   };
 
   const handleChange = (e) => {
@@ -78,29 +86,60 @@ const UploadSection = () => {
       className="upload-section"
       style={{ width: isMobile && "100%", borderRadius: isMobile && 0 }}
     >
-      <span
-        className="upload-title"
-        style={{
-          fontSize: isMobile && "23px",
-        }}
-      >
-        Upload Certificates
-      </span>
-      <span
+      {/* <span
         className="desc-dash"
         style={{
           fontSize: isMobile && "20px",
+          paddingBottom: "3vh",
         }}
       >
         You can stamp upto 200 certificates at a time.
-      </span>
+      </span> */}
       <form
         id="upload-form"
         ref={filer}
         encType="multipart/form-data"
         onSubmit={(e) => handleSubmit(e)}
+        style={{
+          // border: "1px solid cyan",
+          width: stagedFiles.length === 0 ? "90%" : "60%",
+        }}
       >
-        <label htmlFor="upload-field" className=" upload-label button">
+        <label
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          htmlFor="upload-field"
+          className=" upload-label button"
+        >
+          <i
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: "46.3%",
+              // background: 'grey'
+              transform: "scale()",
+            }}
+            className="fas fa-cloud-upload-alt"
+          ></i>
+
+          <Typography
+            style={{
+              position: "absolute",
+              textAlign: "center",
+              top: "60%",
+              color: "grey",
+            }}
+            variant="body1"
+            className="uploader-text"
+          >
+            Drag cert(s) here to upload.
+            <br /> Alternatively, you can select documents by clicking here.
+          </Typography>
+
           <input
             type="file"
             id="upload-field"
@@ -113,13 +152,7 @@ const UploadSection = () => {
             // size="100"
           />
         </label>
-        <span className="staged-files">
-          {stagedFiles.map((filename, ndx) => (
-            <span style={{ padding: "10px" }} key={ndx}>
-              {filename}
-            </span>
-          ))}
-        </span>
+
         <button
           type="submit"
           className="button button-primary sub-btn"
@@ -131,6 +164,13 @@ const UploadSection = () => {
           Send files
         </button>
       </form>
+      <span className="staged-files">
+        {stagedFiles.map((filename, ndx) => (
+          <span style={{ padding: "10px" }} key={ndx}>
+            {filename}
+          </span>
+        ))}
+      </span>
       <Dialog
         open={modal}
         classes={{ paper: veriClasses.paper }}

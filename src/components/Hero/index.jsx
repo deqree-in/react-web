@@ -10,6 +10,7 @@ import Alert from "@material-ui/lab/Alert";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import "./index.css";
+import { Check } from "@material-ui/icons";
 
 const iframeStyles = makeStyles({
   paper: {
@@ -19,13 +20,29 @@ const iframeStyles = makeStyles({
 
 const veriStyles = makeStyles({
   paper: {
-    // width: "20vw",
-    // height: "20vh",
+    // width: "60vw",
+    // height: "60vh",
     background: "transparent",
     border: "none",
     boxShadow: "none",
     wordWrap: "break-word",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    // border: "1px solid red",
     // padding: "20px",
+  },
+});
+
+const alertStyles = makeStyles({
+  root: {
+    // border: "5px solid red",
+    // height: "40vh",
+    padding: "5vmin",
+    borderRadius: "28px",
+    fontSize: "25px",
   },
 });
 
@@ -38,12 +55,14 @@ const spinnerStyle = makeStyles({
 const Hero = () => {
   const iframeClasses = iframeStyles();
   const veriClasses = veriStyles();
+  const alertClasses = alertStyles();
   const spinnerClasses = spinnerStyle();
   const [modal, setModal] = React.useState(false);
   const [player, setPlayer] = React.useState(false);
   const [status, setStatus] = React.useState("info");
   const [feedback, setFeedback] = React.useState("verifying...");
   const [link, setLink] = React.useState("");
+  const [issuer, setIssuer] = React.useState("");
   // const playButtonref = React.useRef(null);
 
   React.useEffect(() => {
@@ -133,21 +152,6 @@ const Hero = () => {
     window.onload = function () {
       fullAnimation.init();
     };
-
-    // let button = playButtonref.current;
-
-    // addClass(button, "active");
-    // // setTimeout(() => {
-    // // removeClass(button, "active");
-    // // }, 2500);
-
-    // function addClass(el, className) {
-    //   el.className += ` ${className}`;
-    // }
-
-    // function removeClass(el, className) {
-    // el.className = el.className.replace(className, "");
-    // }
   }, []);
 
   const fileUploader = React.useRef();
@@ -160,9 +164,7 @@ const Hero = () => {
     axios.post("https://deqree.in/api/verifier", formData).then((response) => {
       console.log(response.data);
       if (response.data === "False") {
-        setFeedback(
-          "Some error occured. Please try a different file or try again after sometime"
-        );
+        setFeedback("Your file has not been verified.");
         setStatus("error");
       }
       if (response.data.True) {
@@ -171,6 +173,8 @@ const Hero = () => {
         `;
         setStatus("success");
         setFeedback(text);
+        // console.log(response.data);
+        setIssuer(response.data.Issuer);
         setLink(
           `https://explorer.cardano-testnet.iohkdev.io/en/transaction?id=${response.data.True}`
         );
@@ -323,6 +327,8 @@ const Hero = () => {
         </section>
       </main>
       <Dialog
+        fullWidth
+        maxWidth="md"
         open={modal}
         classes={{ paper: veriClasses.paper }}
         onClose={() => {
@@ -334,28 +340,39 @@ const Hero = () => {
         {feedback === "verifying..." ? (
           <CircularProgress
             size={70}
-            classes={{ colorPrimary: spinnerClasses.colorPrimary }}
+            classes={{
+              colorPrimary: spinnerClasses.colorPrimary,
+              svg: spinnerClasses.svg,
+              circle: spinnerClasses.circle,
+            }}
           />
         ) : (
           <Alert
             style={{ wordWrap: "break-word", width: "100%", height: "100%" }}
-            severity={status}
+            severity="info"
+            // icon={false}
+            iconMapping={{ info: <Check /> }}
+            classes={{ root: alertClasses.root }}
             style={{
               wordBreak: "break-word",
             }}
           >
             {feedback}
-            {link !== "" && (
+            {status === "success" && (
               <a target="_blank" href={link}>
                 Check on Blockchain
               </a>
             )}
+            <br />
+            <span>Issued By: {issuer} </span>
+            <br />
+            <span>Signed through: Deqree</span>
           </Alert>
         )}
       </Dialog>
       <Dialog
         fullWidth
-        maxWidth="xl"
+        maxWidth="md"
         classes={{ paper: iframeClasses.paper }}
         open={player}
         onClose={() => setPlayer(!player)}
@@ -365,7 +382,7 @@ const Hero = () => {
             width: "100%",
             height: "100%",
           }}
-          src="https://www.youtube.com/embed/3d6DsjIBzJ4"
+          src="https://www.youtube.com/embed/97DeUb8G6sQ"
           title="YouTube video player"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

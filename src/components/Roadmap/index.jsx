@@ -10,7 +10,7 @@ const Roadmap = () => {
       className="roadmap"
       id="roadmap"
       style={{
-        marginTop: isMobile ? "70vh" : 0,
+        marginTop: isMobile ? "95vh" : 0,
         marginBottom: isMobile ? "20vh" : 0,
       }}
     >
